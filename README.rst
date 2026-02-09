@@ -29,6 +29,84 @@ The main point in development of pybb is to build it so it could be
 
 PyBBM includes ready to use `example/test project with instructions <http://readthedocs.org/docs/pybbm/en/latest/example.html>`_
 
+Running Demo Projects Locally
+==============================
+
+The repository includes two demo projects in the ``test/`` directory that you can run locally to see PyBBM in action.
+
+Demo #1: Bootstrap-themed Forum (Recommended for getting started)
+------------------------------------------------------------------
+
+**Location:** ``test/example_bootstrap/``
+
+**Features:** Simple Bootstrap UI, django-registration-redux for authentication, BBCode markup, sample data
+
+**Quick Start:**
+
+.. code-block:: bash
+
+    cd test/example_bootstrap
+
+    # Create virtual environment
+    python -m venv venv
+    source venv/bin/activate  # Windows: venv\Scripts\activate
+
+    # Install pybb in development mode
+    pip install -e ../../
+
+    # Update Django version (edit requirements.txt: django>=4.2,<5.0)
+    # Then install dependencies
+    pip install -r requirements.txt
+
+    # Add to settings.py: ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+    # Set up database
+    python manage.py migrate
+
+    # Load demo data (includes users: admin/admin, moderator/moderator)
+    python manage.py loaddata fixtures/demo_data.json
+
+    # Run server
+    python manage.py runserver
+
+Visit http://localhost:8000/forum/ and login with **admin/admin** or **moderator/moderator**
+
+Demo #2: Third-Party Integration Showcase (Advanced)
+-----------------------------------------------------
+
+**Location:** ``test/example_thirdparty/``
+
+**Features:** pinax-theme-bootstrap, django-user-accounts, captcha, postmarkup parser, sorl-thumbnail
+
+**Quick Start:**
+
+.. code-block:: bash
+
+    cd test/example_thirdparty
+
+    # Create virtual environment
+    python -m venv venv
+    source venv/bin/activate
+
+    # Install pybb in development mode
+    pip install -e ../../
+
+    # Update Django version (edit requirements.txt: django>=4.2,<5.0)
+    pip install -r requirements.txt
+
+    # Add to settings.py: ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+    # Set up database
+    python manage.py migrate
+
+    # Create superuser
+    python manage.py createsuperuser
+
+    # Run server
+    python manage.py runserver
+
+**Note:** The requirements files specify older Django versions (1.8-1.11). For modern Python versions (3.8+), you'll need to update to ``django>=4.2,<5.0`` in the requirements.txt files. Some third-party packages may require updates for Django 4.2 compatibility.
+
 i18n support
 ============
 PYBB support English, Russian, Slovak, Ukrainian, Brazilian Portuguese, Polish, Hebrew, French, Chinese, Japanese,

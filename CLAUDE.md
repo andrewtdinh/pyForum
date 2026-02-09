@@ -217,28 +217,126 @@ Apply migrations:
 python test/test_project/manage.py migrate pybb
 ```
 
-### Running Demo Projects
+### Running Demo Projects Locally
 
-The repository includes two out-of-the-box demo projects:
+The repository includes two out-of-the-box demo projects that can be run locally.
 
-**Demo #1 - Bootstrap Theme** (Simple, recommended for getting started):
+**Important Compatibility Note:** The demo projects' requirements.txt files specify Django 1.8-1.11, but modern Python (3.8+) requires Django 4.2+. You'll need to update the Django version before installation.
+
+#### Demo #1 - Bootstrap Theme (Recommended for Getting Started)
+
+**Location:** `test/example_bootstrap/`
+
+**What you get:**
+- Simple Bootstrap UI
+- User registration/authentication via django-registration-redux
+- BBCode markup parser
+- Sample forum data with pre-created users
+
+**Setup Steps:**
+
 ```bash
 cd test/example_bootstrap
+
+# 1. Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 2. Install pybb in development mode from repo root
+pip install -e ../../
+
+# 3. Update requirements.txt first
+#    Change: django>=1.8,<1.11
+#    To:     django>=4.2,<5.0
+#    Then install dependencies:
 pip install -r requirements.txt
+
+# 4. Add ALLOWED_HOSTS to example_bootstrap/settings.py
+#    Add this line after SECRET_KEY:
+#    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# 5. Create database and run migrations
 python manage.py migrate
-python manage.py loaddata fixtures/sample_data.json  # Optional: load sample forum data
+
+# 6. Load demo data (includes pre-created users)
+python manage.py loaddata fixtures/demo_data.json
+
+# 7. Start development server
 python manage.py runserver
 ```
-Features: django-registration-redux for auth, BBCode markup, Bootstrap UI
 
-**Demo #2 - Third-Party Integration** (Advanced, shows ecosystem integration):
+**Access the forum:**
+- URL: http://localhost:8000/forum/
+- Admin user: `admin` / `admin` (superuser)
+- Moderator user: `moderator` / `moderator`
+- Register new users at: http://localhost:8000/accounts/register/
+
+#### Demo #2 - Third-Party Integration (Advanced)
+
+**Location:** `test/example_thirdparty/`
+
+**What you get:**
+- pinax-theme-bootstrap theming
+- django-user-accounts for authentication
+- django-simple-captcha integration
+- postmarkup as alternative markup parser
+- sorl-thumbnail for image handling
+- django-pure-pagination
+
+**Setup Steps:**
+
 ```bash
 cd test/example_thirdparty
+
+# 1. Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 2. Install pybb in development mode from repo root
+pip install -e ../../
+
+# 3. Update requirements.txt first
+#    Change: django>=1.8,<1.11
+#    To:     django>=4.2,<5.0
+#    Then install dependencies:
 pip install -r requirements.txt
+
+# 4. Add ALLOWED_HOSTS to example_thirdparty/settings.py
+#    Add this line after SECRET_KEY:
+#    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# 5. Create database and run migrations
 python manage.py migrate
+
+# 6. Create a superuser account
+python manage.py createsuperuser
+
+# 7. Start development server
 python manage.py runserver
 ```
-Features: pinax-theme-bootstrap, django-user-accounts, captcha, postmarkup parser, sorl-thumbnail
+
+**Access the forum:**
+- URL: http://localhost:8000/
+- Login with the superuser account you created
+
+**⚠️ Potential Issues:**
+- Some third-party packages (pinax-theme-bootstrap, django-user-accounts) may have compatibility issues with Django 4.2
+- You may need to update or replace these packages if you encounter errors
+- Check for updated versions or Django 4.2-compatible alternatives
+
+#### Troubleshooting Demo Projects
+
+**Issue:** `ImportError` or package compatibility errors
+- **Solution:** Try installing updated versions of the problematic packages or check if Django 4.2-compatible versions exist
+
+**Issue:** `DisallowedHost` error when accessing the site
+- **Solution:** Ensure you added `ALLOWED_HOSTS = ['localhost', '127.0.0.1']` to the settings.py file
+
+**Issue:** Database errors during migration
+- **Solution:** Delete the `testdb.sqlite` file and run `python manage.py migrate` again
+
+**Issue:** Static files not loading
+- **Solution:** Run `python manage.py collectstatic` or ensure `DEBUG = True` in settings.py (development only)
 
 ## Architecture
 
