@@ -90,20 +90,10 @@ pyForum/  (PyBBM - Django Forum Application)
 │
 └── 🧪 test/                  # Test projects & examples
     │
-    ├── test_project/         # Main test project
-    │   ├── manage.py
-    │   ├── test_project/
-    │   │   ├── settings.py   # Test configuration
-    │   │   ├── urls.py
-    │   │   └── markup_parsers.py
-    │   ├── test_app/         # Custom test app
-    │   │   ├── models.py     # Custom user model
-    │   │   └── migrations/
-    │   ├── templates/pybb/   # Template overrides
-    │   └── requirements_test.txt
+    ├── 📦 DEMO PROJECTS (Out-of-the-box examples)
     │
-    ├── example_bootstrap/    # Bootstrap-themed example
-    │   ├── manage.py
+    ├── example_bootstrap/    # Demo #1: Bootstrap-themed forum
+    │   ├── manage.py         # Ready to run with ./manage.py runserver
     │   ├── example_bootstrap/
     │   │   ├── settings.py
     │   │   └── urls.py
@@ -111,17 +101,31 @@ pyForum/  (PyBBM - Django Forum Application)
     │   │   ├── pybb/         # Forum templates
     │   │   └── registration/ # Auth templates
     │   ├── static/bootstrap/
-    │   ├── fixtures/         # Sample data
-    │   └── requirements.txt
+    │   ├── fixtures/         # Sample data for quick setup
+    │   └── requirements.txt  # Uses django-registration-redux, BBCode
     │
-    └── example_thirdparty/   # Third-party integration example
-        ├── manage.py
-        ├── example_thirdparty/
-        │   ├── settings.py
-        │   ├── urls.py
-        │   └── forms.py      # Custom form overrides
-        ├── templates/pybb/
-        └── requirements.txt
+    ├── example_thirdparty/   # Demo #2: Third-party integration showcase
+    │   ├── manage.py         # Demonstrates pinax-theme, user-accounts
+    │   ├── example_thirdparty/
+    │   │   ├── settings.py
+    │   │   ├── urls.py
+    │   │   └── forms.py      # Custom form overrides
+    │   ├── templates/pybb/
+    │   └── requirements.txt  # Uses postmarkup, captcha, sorl-thumbnail
+    │
+    └── 🧪 TEST HARNESS
+
+        └── test_project/     # Test suite runner (not a demo)
+            ├── manage.py
+            ├── test_project/
+            │   ├── settings.py   # Test configuration
+            │   ├── urls.py
+            │   └── markup_parsers.py
+            ├── test_app/         # Custom test app
+            │   ├── models.py     # Custom user model
+            │   └── migrations/
+            ├── templates/pybb/   # Template overrides
+            └── requirements_test.txt
 
 
 📋 Key Architecture Flow:
@@ -213,13 +217,28 @@ Apply migrations:
 python test/test_project/manage.py migrate pybb
 ```
 
-### Running Example Projects
+### Running Demo Projects
 
-The project includes test/example projects:
+The repository includes two out-of-the-box demo projects:
+
+**Demo #1 - Bootstrap Theme** (Simple, recommended for getting started):
 ```bash
 cd test/example_bootstrap
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py loaddata fixtures/sample_data.json  # Optional: load sample forum data
 python manage.py runserver
 ```
+Features: django-registration-redux for auth, BBCode markup, Bootstrap UI
+
+**Demo #2 - Third-Party Integration** (Advanced, shows ecosystem integration):
+```bash
+cd test/example_thirdparty
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+Features: pinax-theme-bootstrap, django-user-accounts, captcha, postmarkup parser, sorl-thumbnail
 
 ## Architecture
 
