@@ -6,6 +6,160 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 PyBBM (pybbm) is a Django forum application that provides a full-featured bulletin board system. The project emphasizes easy integration into existing Django sites by focusing on forum-specific functionality rather than reimplementing user management, authentication, or password recovery.
 
+## Repository Structure
+
+```
+pyForum/  (PyBBM - Django Forum Application)
+│
+├── 📄 Core Files
+│   ├── setup.py              # Package configuration & dependencies
+│   ├── runtests.py           # Test runner entry point
+│   ├── tox.ini               # Multi-version testing config
+│   ├── README.rst            # Project documentation
+│   ├── CLAUDE.md             # AI assistant guidance
+│   └── .travis.yml           # CI/CD configuration
+│
+├── 📦 pybb/                  # Main Django application
+│   │
+│   ├── Core Application Files
+│   │   ├── models.py         # Category, Forum, Topic, Post, Profile, Polls
+│   │   ├── views.py          # CBVs for forum display & interactions
+│   │   ├── urls.py           # URL routing (ID-based & nice URLs)
+│   │   ├── forms.py          # Post, Poll, Subscription forms
+│   │   ├── admin.py          # Django admin configuration
+│   │   └── apps.py           # Django app configuration
+│   │
+│   ├── Permission & Access Control
+│   │   └── permissions.py    # Extensible permission handler system
+│   │
+│   ├── Markup System
+│   │   └── markup/
+│   │       ├── base.py       # Abstract BaseParser class
+│   │       ├── bbcode.py     # BBCode markup parser
+│   │       └── markdown.py   # Markdown markup parser
+│   │
+│   ├── Django Integration
+│   │   ├── middleware.py     # PybbMiddleware (anonymous tracking)
+│   │   ├── context_processors.py  # Template context variables
+│   │   ├── compat.py         # Django version compatibility layer
+│   │   ├── defaults.py       # All PYBB_* settings with defaults
+│   │   └── signals.py        # Django signal handlers
+│   │
+│   ├── Features
+│   │   ├── profiles.py       # PybbProfile base class
+│   │   ├── subscription.py   # Topic/Forum subscription logic
+│   │   ├── feeds.py          # RSS feeds (posts, topics)
+│   │   └── util.py           # Helper functions
+│   │
+│   ├── 🗄️ management/       # Django management commands
+│   │   └── commands/
+│   │       ├── pybb_update_counters.py      # Fix forum/topic counters
+│   │       ├── pybb_delete_invalid_topics.py # Cleanup orphaned topics
+│   │       ├── supermoderator.py            # Grant moderator privileges
+│   │       ├── migrate_profile.py           # Profile data migration
+│   │       └── dump_topics.py               # Export topics
+│   │
+│   ├── 🎨 templates/         # Django templates
+│   │   └── pybb/             # Forum UI templates
+│   │
+│   ├── 🎨 static/            # CSS, JS, images
+│   │   ├── pybb/             # Forum assets
+│   │   └── markitup/         # Markup editor assets
+│   │
+│   ├── 🌍 locale/            # i18n translations (14 languages)
+│   │   ├── de/, es/, fr/, he/, it/, ja/, pl/
+│   │   ├── pt_BR/, ru/, sk/, sv/, uk/, zh/
+│   │   └── [LC_MESSAGES/django.po]
+│   │
+│   ├── 📊 migrations/        # Database migrations
+│   │   └── 0001_initial.py → 0007_auto_*.py
+│   │
+│   ├── 🏷️ templatetags/      # Custom template tags
+│   │   └── pybb_tags.py      # Forum-specific template helpers
+│   │
+│   └── tests.py              # Test suite (94%+ coverage)
+│
+├── 📚 docs/                  # Sphinx documentation
+│   ├── index.rst
+│   ├── install.rst           # Installation guide
+│   ├── settings.rst          # Configuration reference
+│   ├── permissions.rst       # Permission system docs
+│   ├── customuser.rst        # Custom user model guide
+│   ├── markup.rst            # Markup system docs
+│   └── [other .rst files]
+│
+└── 🧪 test/                  # Test projects & examples
+    │
+    ├── test_project/         # Main test project
+    │   ├── manage.py
+    │   ├── test_project/
+    │   │   ├── settings.py   # Test configuration
+    │   │   ├── urls.py
+    │   │   └── markup_parsers.py
+    │   ├── test_app/         # Custom test app
+    │   │   ├── models.py     # Custom user model
+    │   │   └── migrations/
+    │   ├── templates/pybb/   # Template overrides
+    │   └── requirements_test.txt
+    │
+    ├── example_bootstrap/    # Bootstrap-themed example
+    │   ├── manage.py
+    │   ├── example_bootstrap/
+    │   │   ├── settings.py
+    │   │   └── urls.py
+    │   ├── templates/
+    │   │   ├── pybb/         # Forum templates
+    │   │   └── registration/ # Auth templates
+    │   ├── static/bootstrap/
+    │   ├── fixtures/         # Sample data
+    │   └── requirements.txt
+    │
+    └── example_thirdparty/   # Third-party integration example
+        ├── manage.py
+        ├── example_thirdparty/
+        │   ├── settings.py
+        │   ├── urls.py
+        │   └── forms.py      # Custom form overrides
+        ├── templates/pybb/
+        └── requirements.txt
+
+
+📋 Key Architecture Flow:
+═══════════════════════════
+
+  User Request
+       ↓
+  urls.py → views.py → permissions.py → models.py
+       ↓         ↓            ↓              ↓
+  templates  forms.py    Profile      Database
+       ↓         ↓                         ↓
+  context   markup/                  Counters
+processors  parsers                  Tracking
+
+
+🔑 Data Model Hierarchy:
+════════════════════════
+
+  Category (name, hidden, slug)
+      ↓
+  Forum (name, moderators, parent, counters)
+      ↓
+  Topic (name, sticky, closed, poll_type)
+      ↓
+  Post (body → body_html, on_moderation)
+
+
+⚙️ Core Systems:
+════════════════
+
+• Permissions: DefaultPermissionHandler (may_*, filter_*)
+• Markup: BBCode/Markdown → HTML rendering
+• Subscriptions: Topic & Forum subscriptions with notifications
+• Moderation: Pre-moderation, moderator actions
+• Read Tracking: Per-user topic/forum read status
+• Polls: Single/multiple choice voting
+```
+
 ## Development Commands
 
 ### Running Tests
