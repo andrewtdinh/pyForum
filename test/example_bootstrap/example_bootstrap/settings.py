@@ -36,6 +36,10 @@ STATICFILES_FINDERS = (
 
 SECRET_KEY = 'qd@j3*it@3j2cgc#7t@m)^r1bnc53uam7o6u_+x$f5w3$b@3ix'
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -48,7 +52,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                # 'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
