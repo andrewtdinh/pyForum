@@ -38,6 +38,10 @@ STATICFILES_FINDERS = (
 
 SECRET_KEY = '0t!z!jzl#o%4=#!it5!4pgge_!9_$2v*l-(jdn++!_sxn)+$wl'
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -50,7 +54,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                # 'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
@@ -88,7 +92,6 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'pure_pagination',
     'account',
-    'pinax_theme_bootstrap',
     'bootstrapform',
     'captcha',
 )
@@ -100,3 +103,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Pybb
 PYBB_TEMPLATE = "site_base.html"
 PYBB_ATTACHMENT_ENABLE = True
+PYBB_MARKUP = 'markdown'
